@@ -6,7 +6,7 @@
     "description": "API with JWT auth using Bearer tokens"
   },
   "servers": [
-    { "url": "http://localhost:5000" }
+    { "url": "https://product-inventory-api-85ge.onrender.com" }
   ],
   "components": {
     "securitySchemes": {
