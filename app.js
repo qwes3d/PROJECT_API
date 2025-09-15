@@ -34,8 +34,13 @@ app.use("/auth", authRoutes);
 // 🔹 Load swagger.json instead of swagger.js
 const swaggerFile = path.join(__dirname, "swagger.json");
 const swaggerDocument = JSON.parse(fs.readFileSync(swaggerFile, "utf8"));
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+// Serve Swagger UI
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
+  swaggerOptions: {
+    persistAuthorization: true // <-- this keeps your Bearer token after login
+  }
+}));
 // Error handlers
 app.use(notFound);
 app.use(errorHandler);

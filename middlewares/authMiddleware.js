@@ -6,10 +6,13 @@ const bcrypt = require("bcryptjs");
 const protectJWT = async (req, res, next) => {
   let token;
 
-  if (req.cookies && req.cookies.jwt) {
-    token = req.cookies.jwt;
-  } else if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+  // Check Authorization header first
+  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
     token = req.headers.authorization.split(" ")[1];
+  } 
+  // Optional: fallback to cookie (if still used elsewhere)
+  else if (req.cookies && req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
 
   if (!token) {
@@ -20,12 +23,10 @@ const protectJWT = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decoded.id).select("-password");
     next();
-  } catch (error) {
+  } catch (err) {
     res.status(401).json({ message: "Not authorized, token failed" });
   }
 };
-
-
 
 // Verify password for update & delete
 const confirmPassword = async (req, res, next) => {
@@ -33,7 +34,7 @@ const confirmPassword = async (req, res, next) => {
     const { password } = req.body;
     if (!password) return res.status(400).json({ message: "Password confirmation required" });
 
-    const user = await User.findById(req.user._id); // get full user with password
+    const user = await User.findById(req.user._id);
     if (!user) return res.status(401).json({ message: "User not found" });
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -44,6 +45,5 @@ const confirmPassword = async (req, res, next) => {
     res.status(500).json({ message: err.message });
   }
 };
-
 
 module.exports = { protectJWT, confirmPassword };
