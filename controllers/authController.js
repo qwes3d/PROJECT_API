@@ -31,38 +31,39 @@ exports.registerUser = async (req, res) => {
 };
 
 // @desc Login
+
 exports.loginUser = async (req, res) => {
+  const { username, password } = req.body;
+
   try {
-    const { username, password } = req.body;
     const user = await User.findOne({ username });
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
-    if (user && (await user.matchPassword(password))) {
-      const token = generateToken(user._id);
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
-      // Set JWT as HttpOnly cookie
-      res.cookie("jwt", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 60 * 60 * 1000 // 1 hour
-      });
+    // Sign JWT
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
-      res.json({
-        message: "Login successful",
-        user: {
-          id: user._id,
-          username: user.username,
-          email: user.email
-        }
-      });
-    } else {
-      res.status(401).json({ message: "Invalid email or password" });
-    }
+    // Set cookie (HttpOnly)
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 3600000, // 1 hour
+      sameSite: "strict",
+    });
+
+    // Return JWT in response body for Swagger
+    res.json({
+      message: "Login successful",
+      token: token, // <-- important for Swagger testing
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
-
 // @desc Logout
 exports.logoutUser = (req, res) => {
   res.clearCookie("jwt");
