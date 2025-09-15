@@ -8,8 +8,9 @@ const protectJWT = async (req, res, next) => {
 
   if (req.cookies && req.cookies.jwt) {
     token = req.cookies.jwt;
-  } else if (req.header.authorization && req.header.authorization.startsWith("Bearer")) {
-    token = req.header.authorization.split(" ")[1];
+  } else if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+    token = req.headers.authorization.split(" ")[1];
+  }
 
   if (!token) {
     return res.status(401).json({ message: "Not authorized, no token" });
@@ -22,8 +23,8 @@ const protectJWT = async (req, res, next) => {
   } catch (error) {
     res.status(401).json({ message: "Not authorized, token failed" });
   }
-}
 };
+
 
 
 // Verify password for update & delete
@@ -32,7 +33,10 @@ const confirmPassword = async (req, res, next) => {
     const { password } = req.body;
     if (!password) return res.status(400).json({ message: "Password confirmation required" });
 
-    const isMatch = await bcrypt.compare(password, req.user.password); // if password is included
+    const user = await User.findById(req.user._id); // get full user with password
+    if (!user) return res.status(401).json({ message: "User not found" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: "Password incorrect" });
 
     next();
