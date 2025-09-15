@@ -1,43 +1,23 @@
 ### Get all contacts
-GET https://contactsapi-ofmk.onrender.com/contacts
+GET https://product-inventory-api-85ge.onrender.com/api-docs/#/Inventory/get_api_inventory
 Content-Type: application/json
 
 ###
 
 ### Get single contact by _id
-GET https://contactsapi-ofmk.onrender.com/contacts/68bc57dc92caf43538c1dc12
+GET https://product-inventory-api-85ge.onrender.com/api-docs/#/Inventory/get_api_inventory/68c724d7472ee9e809a9aa83
 Content-Type: application/json
 
 ###
 
-### Create new contact
-POST https://contactsapi-ofmk.onrender.com/contacts
+### Update a contact (replace with real _id) you must login
+PUT https://product-inventory-api-85ge.onrender.com/api-docs/#/Inventory/get_api_inventory/68c724d7472ee9e809a9aa83
 Content-Type: application/json
 
-{
-  "firstName": "New",
-  "lastName": "Person",
-  "email": "new@example.com",
-  "favoriteColor": "Orange",
-  "birthday": "2000-01-01"
-}
 
 ###
 
-### Update a contact (replace with real _id)
-PUT https://contactsapi-ofmk.onrender.com/contacts/68bc57dc92caf43538c1dc12
+### Delete a contact (replace with real _id) you must login
+DELETE https://product-inventory-api-85ge.onrender.com/api-docs/#/Inventory/get_api_inventory/68c724d7472ee9e809a9aa83
 Content-Type: application/json
 
-{
-  "firstName": "Updated",
-  "lastName": "Person",
-  "email": "updated@example.com",
-  "favoriteColor": "Yellow",
-  "birthday": "1999-12-31"
-}
-
-###
-
-### Delete a contact (replace with real _id)
-DELETE https://contactsapi-ofmk.onrender.com/contacts/68bc57dc92caf43538c1dc12
-Content-Type: application/json
