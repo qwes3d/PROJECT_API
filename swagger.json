@@ -1,0 +1,265 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Products & Inventory API",
+    "version": "1.0.0",
+    "description": "API with JWT auth stored in HttpOnly cookies"
+  },
+  "servers": [
+    { "url": "http://localhost:5000" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "jwt"
+      }
+    },
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "required": ["username", "password"],
+        "properties": {
+          "username": { "type": "string", "example": "testuser" },
+          "password": { "type": "string", "example": "1234" }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string", "example": "Login successful, JWT set in cookie" }
+        }
+      },
+      "Inventory": {
+        "type": "object",
+        "required": [
+          "name",
+          "price",
+          "description",
+          "supplier",
+          "manufacturer",
+          "category",
+          "model"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string", "example": "Laptop" },
+          "description": { "type": "string", "example": "High-performance laptop" },
+          "category": { "type": "string", "example": "Electronics" },
+          "model": { "type": "string", "example": "XPS-15" },
+          "manufacturer": { "type": "string", "example": "Dell" },
+          "supplier": { "type": "string", "example": "Tech Distributor Ltd" },
+          "price": { "type": "number", "example": 1299.99 }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Register a new user",
+        "tags": ["Auth"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "password"],
+                "properties": {
+                  "username": { "type": "string", "example": "newuser" },
+                  "email": { "type":"string", "example": "new@exmple.com" },
+                  "password": { "type": "string", "example": "1234" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string", "example": "User registered successfully" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Invalid data or user already exists" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login to get JWT (stored in cookie)",
+        "tags": ["Auth"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful, cookie is set",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LoginResponse" }
+              }
+            }
+          },
+          "400": { "description": "Invalid credentials" }
+        }
+      }
+    },
+    "/api/inventory": {
+  "get": {
+    "summary": "Get all inventory items",
+    "tags": ["Inventory"],
+    "responses": {
+      "200": {
+        "description": "List of all items",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/Inventory" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "post": {
+    "summary": "Create a new inventory item",
+    "tags": ["Inventory"],
+    "security": [{ "cookieAuth": [] }],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "allOf": [
+              { "$ref": "#/components/schemas/Inventory" },
+              {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "example": "yourpassword"
+                  }
+                },
+                "required": ["password"]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "201": { "description": "Item created successfully" },
+      "401": { "description": "Unauthorized" }
+    }
+  }
+},
+"/api/inventory/{id}": {
+  "get": {
+    "summary": "Get a single inventory item",
+    "tags": ["Inventory"],
+    "parameters": [
+      {
+        "in": "path",
+        "name": "id",
+        "schema": { "type": "string" },
+        "required": true,
+        "description": "The inventory ID"
+      }
+    ],
+    "responses": {
+      "200": { "description": "The inventory item", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Inventory" } } } },
+      "404": { "description": "Item not found" }
+    }
+  },
+  "put": {
+    "summary": "Update an inventory item",
+    "tags": ["Inventory"],
+    "security": [{ "cookieAuth": [] }],
+    "parameters": [
+      {
+        "in": "path",
+        "name": "id",
+        "schema": { "type": "string" },
+        "required": true,
+        "description": "The inventory ID"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "allOf": [
+              { "$ref": "#/components/schemas/Inventory" },
+              {
+                "type": "object",
+                "properties": {
+                  "password": { "type": "string", "example": "yourpassword" }
+                },
+                "required": ["password"]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": { "description": "Item updated successfully" },
+      "401": { "description": "Unauthorized" },
+      "404": { "description": "Item not found" }
+    }
+  },
+  "delete": {
+    "summary": "Delete an inventory item",
+    "tags": ["Inventory"],
+    "security": [{ "cookieAuth": [] }],
+    "parameters": [
+      {
+        "in": "path",
+        "name": "id",
+        "schema": { "type": "string" },
+        "required": true,
+        "description": "The inventory ID"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "password": { "type": "string", "example": "yourpassword" }
+            },
+            "required": ["password"]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": { "description": "Item deleted successfully" },
+      "401": { "description": "Unauthorized" },
+      "404": { "description": "Item not found" }
+    }
+  }
+}
+  }
+}

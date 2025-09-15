@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Laptop",
+    "description": "High-performance laptop with 16GB RAM and 512GB SSD",
+    "category": "Electronics",
+    "model": "XPS-15",
+    "manufacturer": "Dell",
+    "supplier": "Tech Distributor Ltd",
+    "price": 1299.99,
+    "quantity": 10,
+    "sku": "LAP12345",
+    "tags": ["computer", "electronics", "laptop"]
+  },
+  {
+    "name": "Smartphone",
+    "description": "Latest 5G smartphone with AMOLED display",
+    "category": "Electronics",
+    "model": "Galaxy S24",
+    "manufacturer": "Samsung",
+    "supplier": "Mobile Hub Ltd",
+    "price": 899.99,
+    "quantity": 25,
+    "sku": "PHN67890",
+    "tags": ["mobile", "electronics", "smartphone"]
+  },
+  {
+    "name": "Office Chair",
+    "description": "Ergonomic office chair with adjustable height and lumbar support",
+    "category": "Furniture",
+    "model": "ErgoPlus",
+    "manufacturer": "Herman Miller",
+    "supplier": "Furniture World",
+    "price": 299.99,
+    "quantity": 15,
+    "sku": "CHR24680",
+    "tags": ["furniture", "chair", "office"]
+  },
+  {
+    "name": "Bluetooth Headphones",
+    "description": "Noise-cancelling over-ear headphones with 30 hours of battery",
+    "category": "Accessories",
+    "model": "WH-1000XM5",
+    "manufacturer": "Sony",
+    "supplier": "Gadget Store Ltd",
+    "price": 349.99,
+    "quantity": 50,
+    "sku": "HDP11223",
+    "tags": ["audio", "headphones", "electronics"]
+  },
+  {
+    "name": "Electric Kettle",
+    "description": "1.7L stainless steel electric kettle with auto shut-off",
+    "category": "Appliances",
+    "model": "KET-789",
+    "manufacturer": "Philips",
+    "supplier": "Home Essentials Ltd",
+    "price": 59.99,
+    "quantity": 30,
+    "sku": "KET33445",
+    "tags": ["kitchen", "appliance", "electric"]
+  }
+]

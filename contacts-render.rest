@@ -1,0 +1,43 @@
+### Get all contacts
+GET https://contactsapi-ofmk.onrender.com/contacts
+Content-Type: application/json
+
+###
+
+### Get single contact by _id
+GET https://contactsapi-ofmk.onrender.com/contacts/68bc57dc92caf43538c1dc12
+Content-Type: application/json
+
+###
+
+### Create new contact
+POST https://contactsapi-ofmk.onrender.com/contacts
+Content-Type: application/json
+
+{
+  "firstName": "New",
+  "lastName": "Person",
+  "email": "new@example.com",
+  "favoriteColor": "Orange",
+  "birthday": "2000-01-01"
+}
+
+###
+
+### Update a contact (replace with real _id)
+PUT https://contactsapi-ofmk.onrender.com/contacts/68bc57dc92caf43538c1dc12
+Content-Type: application/json
+
+{
+  "firstName": "Updated",
+  "lastName": "Person",
+  "email": "updated@example.com",
+  "favoriteColor": "Yellow",
+  "birthday": "1999-12-31"
+}
+
+###
+
+### Delete a contact (replace with real _id)
+DELETE https://contactsapi-ofmk.onrender.com/contacts/68bc57dc92caf43538c1dc12
+Content-Type: application/json

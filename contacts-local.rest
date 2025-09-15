@@ -1,0 +1,35 @@
+### Get all contacts
+GET http://localhost:8080/contacts
+Content-Type: application/json
+
+### Get single contact by _id
+GET http://localhost:8080/contacts/68bc57dc92caf43538c1dc12
+Content-Type: application/json
+
+### Create a new contact
+POST http://localhost:8080/contacts
+Content-Type: application/json
+
+{
+  "firstName": "DIAMOND",
+  "lastName": "IKE",
+  "email": "WAD@example.com",
+  "favoriteColor": "BLACK",
+  "birthday": "1999-04-10"
+}
+
+### Update a contact by _id
+PUT http://localhost:8080/contacts/68bc57dc92caf43538c1dc12
+Content-Type: application/json
+
+{
+  "firstName": "Chidiebere",
+  "lastName": "Anyalechi",
+  "email": "chidiebere@updated.com",
+  "favoriteColor": "Blue",
+  "birthday": "1994-07-20"
+}
+
+### Delete a contact by _id
+DELETE http://localhost:8080/contacts/68bc57dc92caf43538c1dc12
+Content-Type: application/json

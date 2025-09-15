@@ -1,0 +1,47 @@
+### Base
+GET http://localhost:8080/
+
+### Swagger UI
+GET http://localhost:8080/api-docs
+
+### OpenAPI (Swagger) JSON on render
+GET https://contactsapi-ofmk.onrender.com/api-docs
+
+### Get all contact IN THE COLLECTION
+GET http://localhost:8080/contacts
+
+### swagger Get all contacts on render
+GET https://contactsapi-ofmk.onrender.com/api-docs/contacts
+
+
+
+### Create contact (POST) - all fields required
+POST http://localhost:8080/contacts
+Content-Type: application/json
+
+{
+  
+  "firstName": "Chidiebere",
+  "lastName": "Anyalechi",
+  "email": "chidiebere@updated.com",
+  "favoriteColor": "Blue",
+  "birthday": "1994-07-20"
+}
+
+### Get contact by id from POST response)
+GET http://localhost:8080/contacts/68bc57dc92caf43538c1dc12
+
+### Update contact (PUT) - must include all fields
+PUT http://localhost:8080/contacts/68bc57dc92caf43538c1dc12
+Content-Type: application/json
+
+{
+  "firstName": "Chidiebere",
+  "lastName": "Anyalechi",
+  "email": "chidiebere@updated.com",
+  "favoriteColor": "Blue",
+  "birthday": "1994-07-20"
+}
+
+### Delete contact
+DELETE http://localhost:8080/contacts/68bc57dc92caf43538c1dc12
