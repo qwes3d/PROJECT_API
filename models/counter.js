@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 
 const counterSchema = new mongoose.Schema({
-  name: { type: String, required: true, unique: true }, // e.g., "supplier", "product"
+  name: { type: String, required: true, unique: true }, // e.g., "supplier", "inventory"
   seq: { type: Number, default: 0 },
 });
 

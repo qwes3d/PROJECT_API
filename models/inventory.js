@@ -9,9 +9,10 @@ const inventorySchema = new mongoose.Schema({
   supplier: { type: String },         // SUPPLIER
   price: { type: Number, required: true, min: 0 }, // PRICE
   quantity: { type: Number, default: 0 },
+  supplier: { type: mongoose.Schema.Types.ObjectId, ref: "Supplier", required: true },
   sku: { type: String, unique: true, sparse: true },
   tags: [String],
   createdAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("Inventory", inventorySchema, "AKI");
+module.exports = mongoose.model("Inventory", inventorySchema,);

@@ -1,6 +1,5 @@
 // controllers/supplierController.js
 const Supplier = require("../models/suppliermodels");
-const Product = require("../models/inventory");
 
 // Generate Supplier ID (SUP-001)
 async function generateSupplierId() {
@@ -23,8 +22,7 @@ exports.createSupplier = async (req, res) => {
 // Get All Suppliers
 exports.getSuppliers = async (req, res) => {
   try {
-    const suppliers = await Supplier.find()
-      .populate("products", "productId name price category");
+    const suppliers = await Supplier.find(); // no populate
     res.status(200).json({ success: true, count: suppliers.length, data: suppliers });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -34,8 +32,7 @@ exports.getSuppliers = async (req, res) => {
 // Get One Supplier
 exports.getSupplier = async (req, res) => {
   try {
-    const supplier = await Supplier.findById(req.params.id)
-      .populate("products", "productId name price category");
+    const supplier = await Supplier.findById(req.params.id); // no populate
     if (!supplier) return res.status(404).json({ success: false, message: "Supplier not found" });
     res.status(200).json({ success: true, data: supplier });
   } catch (err) {
@@ -54,17 +51,14 @@ exports.updateSupplier = async (req, res) => {
   }
 };
 
-// Delete Supplier + cascade delete products
+// Delete Supplier
 exports.deleteSupplier = async (req, res) => {
   try {
     const supplier = await Supplier.findById(req.params.id);
     if (!supplier) return res.status(404).json({ success: false, message: "Supplier not found" });
 
-    // Delete all products of this supplier
-    await Product.deleteMany({ supplier: supplier._id });
     await supplier.deleteOne();
-
-    res.status(200).json({ success: true, message: "Supplier and related products deleted" });
+    res.status(200).json({ success: true, message: "Supplier deleted successfully" });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

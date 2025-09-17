@@ -36,7 +36,7 @@
         "type": "object",
         "required": ["name", "price", "description", "supplier", "manufacturer", "category", "model"],
         "properties": {
-          "id": { "type": "string" },
+          
           "name": { "type": "string", "example": "Laptop" },
           "description": { "type": "string", "example": "High-performance laptop" },
           "category": { "type": "string", "example": "Electronics" },
@@ -173,11 +173,26 @@
         "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Inventory" } } }
+          "content": { 
+            "application/json": { 
+              "schema": {
+                "allOf": [
+                  { "$ref": "#/components/schemas/Inventory" },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "password": { "type": "string", "example": "yourpassword" }
+                    },
+                    "required": ["password"]
+                  }
+                ]
+              }
+            } 
+          }
         },
         "responses": {
           "201": { "description": "Inventory item created successfully" },
-          "401": { "description": "Unauthorized" }
+          "401": { "description": "Unauthorized or invalid password" }
         }
       }
     },
@@ -199,11 +214,26 @@
         "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Inventory" } } }
+          "content": { 
+            "application/json": { 
+              "schema": {
+                "allOf": [
+                  { "$ref": "#/components/schemas/Inventory" },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "password": { "type": "string", "example": "yourpassword" }
+                    },
+                    "required": ["password"]
+                  }
+                ]
+              }
+            } 
+          }
         },
         "responses": {
           "200": { "description": "Inventory item updated successfully" },
-          "401": { "description": "Unauthorized" },
+          "401": { "description": "Unauthorized or invalid password" },
           "404": { "description": "Inventory item not found" }
         }
       },
@@ -212,9 +242,23 @@
         "tags": ["Inventory"],
         "security": [{ "bearerAuth": [] }],
         "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": { "type": "string", "example": "yourpassword" }
+                },
+                "required": ["password"]
+              }
+            }
+          }
+        },
         "responses": {
           "200": { "description": "Inventory item deleted successfully" },
-          "401": { "description": "Unauthorized" },
+          "401": { "description": "Unauthorized or invalid password" },
           "404": { "description": "Inventory item not found" }
         }
       }
