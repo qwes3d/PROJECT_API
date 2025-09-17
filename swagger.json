@@ -42,7 +42,7 @@
           "category": { "type": "string", "example": "Electronics" },
           "model": { "type": "string", "example": "XPS-15" },
           "manufacturer": { "type": "string", "example": "Dell" },
-          "supplier": { "type": "string", "example": "Tech Distributor Ltd" },
+          "supplier": {  "type": "mongoose.Schema.Types.ObjectId", "example": "64a7f0c8e4b0c8a1b2c3d4e5" },
           "price": { "type": "number", "example": 1299.99 }
         }
       },
