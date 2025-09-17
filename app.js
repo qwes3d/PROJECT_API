@@ -2,7 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./db/connect.js");
-const inventoryRoutes = require("./routes/inventoryRoutes.js");
+const inventoryRoutes = require("./routes/inventoryRoutes");
 const authRoutes = require("./routes/auth.js");
 const swaggerUi = require("swagger-ui-express");
 const fs = require("fs");
@@ -11,10 +11,14 @@ const { errorHandler, notFound } = require("./middlewares/errorHandler.js");
 const cookieParser = require("cookie-parser");
 
 dotenv.config();
+
+const supplierroutes = require("./routes/supplierroutes");
+
 const app = express();
 
 // Connect to DB
 connectDB();
+
 
 // Middleware
 app.use(cors());
@@ -29,6 +33,7 @@ app.get("/", (req, res) => {
 
 // API routes
 app.use("/api/inventory", inventoryRoutes);
+app.use("/suppliers", supplierroutes);
 app.use("/auth", authRoutes);
 
 // 🔹 Load swagger.json instead of swagger.js

@@ -32,13 +32,13 @@ router.put(
   "/:id",
   protectJWT,
   inventoryValidator,
-  async (req, res, next) => {
+ async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
     await confirmPassword(req, res, () => inventoryController.updateInventory(req, res));
   }
-);
+); 
 
 // DELETE - protected + confirm password
 router.delete(
