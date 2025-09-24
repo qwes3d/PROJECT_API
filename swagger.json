@@ -17,6 +17,13 @@
       }
     },
     "schemas": {
+      "UnauthorizedResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": false },
+          "message": { "type": "string", "example": "You are not authorized" }
+        }
+      },
       "LoginRequest": {
         "type": "object",
         "required": ["username", "password"],
@@ -36,13 +43,12 @@
         "type": "object",
         "required": ["name", "price", "description", "supplier", "manufacturer", "category", "model"],
         "properties": {
-          
           "name": { "type": "string", "example": "Laptop" },
           "description": { "type": "string", "example": "High-performance laptop" },
           "category": { "type": "string", "example": "Electronics" },
           "model": { "type": "string", "example": "XPS-15" },
           "manufacturer": { "type": "string", "example": "Dell" },
-          "supplier": {  "type": "mongoose.Schema.Types.ObjectId", "example": "64a7f0c8e4b0c8a1b2c3d4e5" },
+          "supplier": { "type": "string", "example": "64a7f0c8e4b0c8a1b2c3d4e5" },
           "price": { "type": "number", "example": 1299.99 }
         }
       },
@@ -59,6 +65,9 @@
       }
     }
   },
+  "security": [
+    { "bearerAuth": [] }
+  ],
   "paths": {
     "/auth/register": {
       "post": {
@@ -99,7 +108,10 @@
           }
         },
         "responses": {
-          "200": { "description": "Login successful, token returned", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponse" } } } },
+          "200": { 
+            "description": "Login successful, token returned", 
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponse" } } } 
+          },
           "400": { "description": "Invalid credentials" }
         }
       }
@@ -108,25 +120,24 @@
       "get": {
         "summary": "Get all suppliers",
         "tags": ["Suppliers"],
-        "security": [{ "bearerAuth": [] }],
         "responses": {
           "200": {
             "description": "List of suppliers",
             "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Supplier" } } } }
-          }
+          },
+          "401": { "description": "Unauthorized", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UnauthorizedResponse" } } } }
         }
       },
       "post": {
         "summary": "Create a new supplier",
         "tags": ["Suppliers"],
-        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Supplier" } } }
         },
         "responses": {
           "201": { "description": "Supplier created successfully" },
-          "401": { "description": "Unauthorized" }
+          "401": { "description": "Unauthorized", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UnauthorizedResponse" } } } }
         }
       }
     },
@@ -134,7 +145,6 @@
       "put": {
         "summary": "Update supplier by ID",
         "tags": ["Suppliers"],
-        "security": [{ "bearerAuth": [] }],
         "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
         "requestBody": {
           "required": true,
@@ -142,18 +152,17 @@
         },
         "responses": {
           "200": { "description": "Supplier updated successfully" },
-          "401": { "description": "Unauthorized" },
+          "401": { "description": "Unauthorized", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UnauthorizedResponse" } } } },
           "404": { "description": "Supplier not found" }
         }
       },
       "delete": {
         "summary": "Delete supplier by ID",
         "tags": ["Suppliers"],
-        "security": [{ "bearerAuth": [] }],
         "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
         "responses": {
           "200": { "description": "Supplier deleted successfully" },
-          "401": { "description": "Unauthorized" },
+          "401": { "description": "Unauthorized", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UnauthorizedResponse" } } } },
           "404": { "description": "Supplier not found" }
         }
       }
@@ -162,37 +171,21 @@
       "get": {
         "summary": "Get all inventory items",
         "tags": ["Inventory"],
-        "security": [{ "bearerAuth": [] }],
         "responses": {
-          "200": { "description": "List of inventory items", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Inventory" } } } } }
+          "200": { "description": "List of inventory items", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Inventory" } } } } },
+          "401": { "description": "Unauthorized", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UnauthorizedResponse" } } } }
         }
       },
       "post": {
         "summary": "Create a new inventory item",
         "tags": ["Inventory"],
-        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
-          "content": { 
-            "application/json": { 
-              "schema": {
-                "allOf": [
-                  { "$ref": "#/components/schemas/Inventory" },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "password": { "type": "string", "example": "yourpassword" }
-                    },
-                    "required": ["password"]
-                  }
-                ]
-              }
-            } 
-          }
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Inventory" } } }
         },
         "responses": {
           "201": { "description": "Inventory item created successfully" },
-          "401": { "description": "Unauthorized or invalid password" }
+          "401": { "description": "Unauthorized", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UnauthorizedResponse" } } } }
         }
       }
     },
@@ -200,65 +193,34 @@
       "get": {
         "summary": "Get a single inventory item",
         "tags": ["Inventory"],
-        "security": [{ "bearerAuth": [] }],
         "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
         "responses": {
           "200": { "description": "Inventory item found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Inventory" } } } },
+          "401": { "description": "Unauthorized", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UnauthorizedResponse" } } } },
           "404": { "description": "Inventory item not found" }
         }
       },
       "put": {
         "summary": "Update an inventory item",
         "tags": ["Inventory"],
-        "security": [{ "bearerAuth": [] }],
         "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
         "requestBody": {
           "required": true,
-          "content": { 
-            "application/json": { 
-              "schema": {
-                "allOf": [
-                  { "$ref": "#/components/schemas/Inventory" },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "password": { "type": "string", "example": "yourpassword" }
-                    },
-                    "required": ["password"]
-                  }
-                ]
-              }
-            } 
-          }
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Inventory" } } }
         },
         "responses": {
           "200": { "description": "Inventory item updated successfully" },
-          "401": { "description": "Unauthorized or invalid password" },
+          "401": { "description": "Unauthorized", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UnauthorizedResponse" } } } },
           "404": { "description": "Inventory item not found" }
         }
       },
       "delete": {
         "summary": "Delete an inventory item",
         "tags": ["Inventory"],
-        "security": [{ "bearerAuth": [] }],
         "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "password": { "type": "string", "example": "yourpassword" }
-                },
-                "required": ["password"]
-              }
-            }
-          }
-        },
         "responses": {
           "200": { "description": "Inventory item deleted successfully" },
-          "401": { "description": "Unauthorized or invalid password" },
+          "401": { "description": "Unauthorized", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UnauthorizedResponse" } } } },
           "404": { "description": "Inventory item not found" }
         }
       }
