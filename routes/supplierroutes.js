@@ -11,14 +11,15 @@ const {
 } = require("../middlewares/suppliervalidation");
 
 // ✅ Apply JWT globally for all supplier routes
-router.use(protectJWT);
+
 
 // GET all suppliers
-router.get("/", suppliercontrollers.getSuppliers);
+router.get("/", protectJWT, suppliercontrollers.getSuppliers);
 
 // CREATE supplier
 router.post(
   "/",
+  protectJWT,
   createSupplierValidation,
   validationHandler,
   suppliercontrollers.createSupplier
@@ -27,12 +28,13 @@ router.post(
 // UPDATE supplier
 router.put(
   "/:id",
+  protectJWT,
   updateSupplierValidation,
   validationHandler,
   suppliercontrollers.updateSupplier
 );
 
 // DELETE supplier
-router.delete("/:id", suppliercontrollers.deleteSupplier);
+router.delete("/:id", protectJWT, suppliercontrollers.deleteSupplier);
 
 module.exports = router;

@@ -8,16 +8,16 @@ const inventoryController = require("../controllers/InvController.js");
 const router = express.Router();
 
 // ✅ Apply JWT globally
-router.use(protectJWT);
+
 
 // GET ALL
-router.get("/", inventoryController.getAllInventory);
+router.get("/", protectJWT, inventoryController.getAllInventory);
 
 // GET ONE
-router.get("/:id", inventoryController.getInventoryById);
+router.get("/:id",protectJWT, inventoryController.getInventoryById);
 
 // CREATE
-router.post("/", inventoryValidator, (req, res) => {
+router.post("/", protectJWT, inventoryValidator, (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
@@ -25,7 +25,7 @@ router.post("/", inventoryValidator, (req, res) => {
 });
 
 // UPDATE
-router.put("/:id", inventoryValidator, (req, res) => {
+router.put("/:id", protectJWT, inventoryValidator, (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
@@ -33,6 +33,6 @@ router.put("/:id", inventoryValidator, (req, res) => {
 });
 
 // DELETE
-router.delete("/:id", inventoryController.deleteInventory);
+router.delete("/:id", protectJWT, inventoryController.deleteInventory);
 
 module.exports = router;
