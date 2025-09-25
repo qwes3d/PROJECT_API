@@ -1,11 +1,13 @@
 const mongoose = require("mongoose");
 
-const supplierSchema = new mongoose.Schema({
-  supplierId: { type: String, unique: true },
-  name: { type: String, required: true },
-  email: String,
-  phone: String,
-  address: String
-}, { timestamps: true });
+const supplierSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String },
+    phone: { type: String },
+    address: { type: String }
+  },
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("Supplier", supplierSchema);
