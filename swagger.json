@@ -56,7 +56,6 @@
         "type": "object",
         "required": ["name", "email", "phone", "address"],
         "properties": {
-      
           "name": { "type": "string", "example": "Supplier A" },
           "email": { "type": "string", "example": "a@example.com" },
           "phone": { "type": "string", "example": "1234567890" },
